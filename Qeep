@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeep - Drating App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div id="q-animation">
+            <h1 id="q-letter">Q</h1>
+        </div>
+
+        <div id="email-form" style="display:none;">
+            <h2>Your Email Address</h2>
+            <input type="email" id="email" placeholder="Enter your email" required>
+            <button id="next-btn">Next</button>
+        </div>
+
+        <div id="verification-form" style="display:none;">
+            <h2>Enter Verification Code</h2>
+            <input type="text" id="verification-code" placeholder="Enter 6-digit code" maxlength="6">
+            <button id="verify-btn">Verify</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+body {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+#q-animation {
+    font-size: 100px;
+    color: black;
+    animation: q-animation 2s infinite;
+}
+
+@keyframes q-animation {
+    0%, 100% {
+        font-size: 50px;
+    }
+    50% {
+        font-size: 100px;
+    }
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    margin: 10px;
+    width: 80%;
+}
+
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: black;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: grey;
+}
+
+
+window.onload = function() {
+    // Q animation for 2 seconds
+    setTimeout(() => {
+        document.getElementById('q-animation').style.display = 'none';
+        document.getElementById('email-form').style.display = 'block';
+    }, 2000);
+}
+
+document.getElementById('next-btn').addEventListener('click', function() {
+    const email = document.getElementById('email').value;
+    if (validateEmail(email)) {
+        // Send verification code (In real-world scenario, send via backend)
+        const verificationCode = generateCode();
+        alert("Verification code sent to: " + email + "\nCode: " + verificationCode); // Just for demo
+        
+        // Show verification input
+        document.getElementById('email-form').style.display = 'none';
+        document.getElementById('verification-form').style.display = 'block';
+
+        // On verification
+        document.getElementById('verify-btn').addEventListener('click', function() {
+            const userCode = document.getElementById('verification-code').value;
+            if (userCode === verificationCode) {
+                alert('Verification successful!');
+            } else {
+                alert('Invalid code. Try again.');
+            }
+        });
+    } else {
+        alert("Please enter a valid email address.");
+    }
+});
+
+// Function to generate a 6-digit verification code
+function generateCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
+// Function to validate email format
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+}
